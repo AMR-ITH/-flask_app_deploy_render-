@@ -1,0 +1,3 @@
+buildCommand: |
+  pip install -r requirements.txt
+  python -m nltk.downloader -d /opt/render/nltk_data -q -f nltk.txt

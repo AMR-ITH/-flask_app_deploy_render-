@@ -26,11 +26,11 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# import nltk
-# nltk.data.path.append('./nltk_data')  # look for data in the repo
+import nltk
+nltk.data.path.append('./nltk_data')  # look for data in the repo
 
-# from nltk.corpus import stopwords
-# stop_words = stopwords.words('english')
+from nltk.corpus import stopwords
+stop_words = stopwords.words('english')
 
 
 

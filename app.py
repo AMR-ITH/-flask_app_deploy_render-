@@ -743,196 +743,196 @@ def generate_trend_graph():
 #         clean = re.sub(r'\s+', ' ', clean.strip())
 #         return clean
 
-class MinimalCommentAnalyzer:
-    def __init__(self, api_key):
-        self.api_key = api_key
-        self.headers = {"Authorization": f"Bearer {api_key}"}
+# class MinimalCommentAnalyzer:
+#     def __init__(self, api_key):
+#         self.api_key = api_key
+#         self.headers = {"Authorization": f"Bearer {api_key}"}
         
-        # Using only the fastest, most reliable models
-        self.models = {
-            # Fast theme classification - very quick response
-            'themes': "https://api-inference.huggingface.co/models/facebook/bart-large-mnli",
-            # Fast summarization - lightweight model
-            'summary': "https://api-inference.huggingface.co/models/sshleifer/distilbart-cnn-6-6"
-        }
+#         # Using only the fastest, most reliable models
+#         self.models = {
+#             # Fast theme classification - very quick response
+#             'themes': "https://api-inference.huggingface.co/models/facebook/bart-large-mnli",
+#             # Fast summarization - lightweight model
+#             'summary': "https://api-inference.huggingface.co/models/sshleifer/distilbart-cnn-6-6"
+#         }
     
-    def quick_api_call(self, model_url, payload, timeout=15):
-        """Ultra-fast API call with minimal retries"""
-        try:
-            response = requests.post(
-                model_url, 
-                headers=self.headers, 
-                json=payload, 
-                timeout=timeout
-            )
+#     def quick_api_call(self, model_url, payload, timeout=15):
+#         """Ultra-fast API call with minimal retries"""
+#         try:
+#             response = requests.post(
+#                 model_url, 
+#                 headers=self.headers, 
+#                 json=payload, 
+#                 timeout=timeout
+#             )
             
-            if response.status_code == 200:
-                result = response.json()
-                if isinstance(result, dict) and 'error' in result:
-                    return {"error": result['error']}
-                return result
-            else:
-                return {"error": f"API error: {response.status_code}"}
+#             if response.status_code == 200:
+#                 result = response.json()
+#                 if isinstance(result, dict) and 'error' in result:
+#                     return {"error": result['error']}
+#                 return result
+#             else:
+#                 return {"error": f"API error: {response.status_code}"}
                 
-        except Exception as e:
-            return {"error": str(e)}
+#         except Exception as e:
+#             return {"error": str(e)}
     
-    def extract_quick_themes(self, comments):
-        """Fast theme extraction using predefined categories"""
+#     def extract_quick_themes(self, comments):
+#         """Fast theme extraction using predefined categories"""
         
-        # Minimal set of most common YouTube video themes
-        quick_themes = [
-            "video quality",
-            "educational content", 
-            "entertainment",
-            "audio issues",
-            "helpful tutorial",
-            "boring content",
-            "great explanation",
-            "technical problems"
-        ]
+#         # Minimal set of most common YouTube video themes
+#         quick_themes = [
+#             "video quality",
+#             "educational content", 
+#             "entertainment",
+#             "audio issues",
+#             "helpful tutorial",
+#             "boring content",
+#             "great explanation",
+#             "technical problems"
+#         ]
         
-        # Take only first 10 comments and combine for speed
-        sample_text = " ".join(comments[:10])[:1000]  # Limit text length
+#         # Take only first 10 comments and combine for speed
+#         sample_text = " ".join(comments[:10])[:1000]  # Limit text length
         
-        payload = {
-            "inputs": sample_text,
-            "parameters": {"candidate_labels": quick_themes}
-        }
+#         payload = {
+#             "inputs": sample_text,
+#             "parameters": {"candidate_labels": quick_themes}
+#         }
         
-        result = self.quick_api_call(self.models['themes'], payload)
+#         result = self.quick_api_call(self.models['themes'], payload)
         
-        if 'error' in result:
-            return ["General Discussion", "Mixed Feedback"]
+#         if 'error' in result:
+#             return ["General Discussion", "Mixed Feedback"]
         
-        # Return top 3 themes only
-        labels = result.get('labels', [])[:3]
-        return [label.title() for label in labels] if labels else ["General Feedback"]
+#         # Return top 3 themes only
+#         labels = result.get('labels', [])[:3]
+#         return [label.title() for label in labels] if labels else ["General Feedback"]
     
-    def generate_quick_summary(self, comments):
-        """Super fast summary generation"""
+#     def generate_quick_summary(self, comments):
+#         """Super fast summary generation"""
         
-        # Take only first 8 comments to keep it lightning fast
-        sample_comments = comments[:8]
-        combined_text = " ".join(sample_comments)
+#         # Take only first 8 comments to keep it lightning fast
+#         sample_comments = comments[:8]
+#         combined_text = " ".join(sample_comments)
         
-        # Truncate to 500 chars for speed
-        if len(combined_text) > 500:
-            combined_text = combined_text[:500] + "..."
+#         # Truncate to 500 chars for speed
+#         if len(combined_text) > 500:
+#             combined_text = combined_text[:500] + "..."
         
-        payload = {
-            "inputs": combined_text,
-            "parameters": {
-                "max_length": 80,  # Very short summary
-                "min_length": 30,
-                "do_sample": False  # Faster processing
-            }
-        }
+#         payload = {
+#             "inputs": combined_text,
+#             "parameters": {
+#                 "max_length": 80,  # Very short summary
+#                 "min_length": 30,
+#                 "do_sample": False  # Faster processing
+#             }
+#         }
         
-        result = self.quick_api_call(self.models['summary'], payload, timeout=10)
+#         result = self.quick_api_call(self.models['summary'], payload, timeout=10)
         
-        if 'error' in result:
-            return f"Quick analysis of {len(comments)} comments shows mixed audience engagement with various feedback patterns."
+#         if 'error' in result:
+#             return f"Quick analysis of {len(comments)} comments shows mixed audience engagement with various feedback patterns."
         
-        summary_text = ""
-        if isinstance(result, list) and len(result) > 0:
-            summary_text = result[0].get('summary_text', '')
-        elif isinstance(result, dict):
-            summary_text = result.get('summary_text', '')
+#         summary_text = ""
+#         if isinstance(result, list) and len(result) > 0:
+#             summary_text = result[0].get('summary_text', '')
+#         elif isinstance(result, dict):
+#             summary_text = result.get('summary_text', '')
         
-        if not summary_text:
-            return f"Analysis of {len(comments)} comments reveals general audience discussion."
+#         if not summary_text:
+#             return f"Analysis of {len(comments)} comments reveals general audience discussion."
             
-        return summary_text
+#         return summary_text
     
-    def clean_comment_fast(self, comment):
-        """Minimal comment cleaning for speed"""
-        if not comment:
-            return ""
-        # Only basic cleaning
-        clean = str(comment).strip()
-        clean = re.sub(r'http\S+', '', clean)  # Remove URLs
-        clean = re.sub(r'\s+', ' ', clean)     # Normalize spaces
-        return clean[:200]  # Truncate long comments
+#     def clean_comment_fast(self, comment):
+#         """Minimal comment cleaning for speed"""
+#         if not comment:
+#             return ""
+#         # Only basic cleaning
+#         clean = str(comment).strip()
+#         clean = re.sub(r'http\S+', '', clean)  # Remove URLs
+#         clean = re.sub(r'\s+', ' ', clean)     # Normalize spaces
+#         return clean[:200]  # Truncate long comments
     
-    def analyze_comments_fast(self, comments):
-        """Ultra-fast analysis - themes and summary only"""
-        try:
-            if len(comments) < 1:
-                return {
-                    "key_themes": ["No Comments"],
-                    "executive_summary": "No comments available for analysis."
-                }
+#     def analyze_comments_fast(self, comments):
+#         """Ultra-fast analysis - themes and summary only"""
+#         try:
+#             if len(comments) < 1:
+#                 return {
+#                     "key_themes": ["No Comments"],
+#                     "executive_summary": "No comments available for analysis."
+#                 }
             
-            # Clean only what we need
-            clean_comments = [
-                self.clean_comment_fast(c) for c in comments[:15]  # Max 15 comments
-                if len(str(c).strip()) > 5
-            ]
+#             # Clean only what we need
+#             clean_comments = [
+#                 self.clean_comment_fast(c) for c in comments[:15]  # Max 15 comments
+#                 if len(str(c).strip()) > 5
+#             ]
             
-            if len(clean_comments) == 0:
-                return {
-                    "key_themes": ["Empty Comments"],
-                    "executive_summary": "Comments were too short or empty for analysis."
-                }
+#             if len(clean_comments) == 0:
+#                 return {
+#                     "key_themes": ["Empty Comments"],
+#                     "executive_summary": "Comments were too short or empty for analysis."
+#                 }
             
-            print(f"⚡ Fast analysis of {len(clean_comments)} comments...")
+#             print(f"⚡ Fast analysis of {len(clean_comments)} comments...")
             
-            # Parallel-ish processing - themes first (usually faster)
-            key_themes = self.extract_quick_themes(clean_comments)
-            executive_summary = self.generate_quick_summary(clean_comments)
+#             # Parallel-ish processing - themes first (usually faster)
+#             key_themes = self.extract_quick_themes(clean_comments)
+#             executive_summary = self.generate_quick_summary(clean_comments)
             
-            return {
-                "key_themes": key_themes,
-                "executive_summary": executive_summary,
-                "processed_comments": len(clean_comments),
-                "total_comments": len(comments),
-                "processing_mode": "ultra_fast"
-            }
+#             return {
+#                 "key_themes": key_themes,
+#                 "executive_summary": executive_summary,
+#                 "processed_comments": len(clean_comments),
+#                 "total_comments": len(comments),
+#                 "processing_mode": "ultra_fast"
+#             }
             
-        except Exception as e:
-            return {
-                "key_themes": ["Analysis Error"],
-                "executive_summary": f"Quick analysis of {len(comments)} comments completed with some limitations.",
-                "error": str(e)
-            }
+#         except Exception as e:
+#             return {
+#                 "key_themes": ["Analysis Error"],
+#                 "executive_summary": f"Quick analysis of {len(comments)} comments completed with some limitations.",
+#                 "error": str(e)
+#             }
 
     
-# Initialize with your HF API key
-HF_API_KEY = os.getenv("HF_API_KEY")
-fast_analyzer = MinimalCommentAnalyzer(HF_API_KEY)
+# # Initialize with your HF API key
+# HF_API_KEY = os.getenv("HF_API_KEY")
+# fast_analyzer = MinimalCommentAnalyzer(HF_API_KEY)
 
 
-@app.route('/ai_comment_summary', methods=['POST'])
-def fast_comment_analysis():
-    """
-    Ultra-fast comment analysis - themes and summary only
-    Optimized for speed with minimal processing
-    """
-    try:
-        data = request.get_json()
+# @app.route('/ai_comment_summary', methods=['POST'])
+# def fast_comment_analysis():
+#     """
+#     Ultra-fast comment analysis - themes and summary only
+#     Optimized for speed with minimal processing
+#     """
+#     try:
+#         data = request.get_json()
         
-        if not data or 'comments' not in data:
-            return jsonify({
-                'error': 'Missing comments data',
-                'required_format': {'comments': ['comment1', 'comment2']}
-            }), 400
+#         if not data or 'comments' not in data:
+#             return jsonify({
+#                 'error': 'Missing comments data',
+#                 'required_format': {'comments': ['comment1', 'comment2']}
+#             }), 400
         
-        comments = data['comments']
+#         comments = data['comments']
         
-        if not isinstance(comments, list):
-            return jsonify({'error': 'Comments must be a list'}), 400
+#         if not isinstance(comments, list):
+#             return jsonify({'error': 'Comments must be a list'}), 400
         
-        # Super fast analysis
-        result = fast_analyzer.analyze_comments_fast(comments)
+#         # Super fast analysis
+#         result = fast_analyzer.analyze_comments_fast(comments)
         
-        return jsonify(result)
+#         return jsonify(result)
     
-    except Exception as e:
-        return jsonify({
-            'error': 'Fast analysis failed',
-            'message': str(e)
-        }), 500
+#     except Exception as e:
+#         return jsonify({
+#             'error': 'Fast analysis failed',
+#             'message': str(e)
+#         }), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
